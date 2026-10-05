@@ -64,6 +64,11 @@
     --z-toast: 400;
 }
 
+/*
+   Тёмная тема отключена: дизайн только светлый, а Mantine закреплён на светлой схеме.
+   С ней при тёмной теме в системе фон страницы становится почти чёрным,
+   а текст в popover корзины — почти белым на белом фоне.
+
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme='light']) {
         --color-bg: #0f0f11;
@@ -87,3 +92,4 @@
     --color-primary-hover: #93c5fd;
     --color-primary-contrast: #0f0f11;
 }
+*/

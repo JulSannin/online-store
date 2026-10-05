@@ -1,35 +1,10 @@
-import { Code, Container, Text, Title } from '@mantine/core';
+import { useState } from 'react';
 
-/**
- * Стартовая заглушка
- *
- * 1. Загрузить товары с API (адрес лежит в import.meta.env.VITE_API_URL, файл .env)
- *    Пока идёт загрузка - показывать лоадер вместо списка.
- * 2. Сделать шапку: название магазина + количество товаров и сумма в корзине
- *    Шапка прилипает к верху при прокрутке
- * 3. Popup корзины по клику на иконку с подробным составом заказа
- * 4. Карточка товара: кнопки '+' / '-' меняют число в инпуте,
- *    'Add to cart' кладёт товар в корзину, при наведении меняются стили.
- * 5. Состояние корзины реализуем через Context API (createContext + useContext).
- * 6. Тесты на React Testing Library.
- *
- * Файловую структуру внутри src/ придумайте сами: алиас `@/` указывает на src,
- * поэтому импорты не сломаются, куда бы вы ни положили файл.
- */
+import { MainPage } from '@/pages/MainPage';
+
 export default function App() {
-    return (
-        <Container size="lg" py="xl">
-            <Title order={1}>Магазин овощей</Title>
-            <Text c="dimmed" mt="sm">
-                Шаблон готов к работе. Удалите содержимое App.tsx и напишите своё приложение.
-            </Text>
-            {/*
-              Пример переменной окружения: Vite читает .env и подставляет
-              значения переменных с префиксом VITE_ в import.meta.env.
-            */}
-            <Text size="sm" mt="md">
-                Адрес API: <Code>{import.meta.env.VITE_API_URL}</Code>
-            </Text>
-        </Container>
-    );
+    // Временно: по плану счётчик переедет в CartProvider (useReducer)
+    const [countProducts] = useState(0);
+
+    return <MainPage countProducts={countProducts} />;
 }

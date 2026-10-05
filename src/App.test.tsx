@@ -5,18 +5,18 @@ import { describe, expect, it } from 'vitest';
 import App from '@/App';
 
 /**
- * Это пример теста
- * Компоненты Mantine нужно оборачивать в MantineProvider, иначе они упадут:
- * удобно вынести такую обёртку в отдельный хелпер renderWithProviders()
+ * Проверяем только сборку приложения целиком: страница рисуется и шапка на месте.
+ * Поведение самой шапки проверяется в modules/Header.test.tsx.
  */
 describe('App', () => {
-    it('отображает название магазина', () => {
+    it('отрисовывает страницу магазина с шапкой', () => {
         render(
-            <MantineProvider>
+            <MantineProvider env="test">
                 <App />
             </MantineProvider>,
         );
 
-        expect(screen.getByRole('heading', { name: /магазин овощей/i })).toBeInTheDocument();
+        expect(screen.getByRole('banner')).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: /vegetable shop/i })).toBeInTheDocument();
     });
 });
