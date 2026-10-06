@@ -5,7 +5,6 @@ import { createRoot } from 'react-dom/client';
 import App from '@/App';
 import { theme } from '@/theme';
 
-// Стили библиотеки подключаются ДО собственных, чтобы их можно было переопределить
 import '@mantine/core/styles.css';
 import '@/styles/index.css';
 

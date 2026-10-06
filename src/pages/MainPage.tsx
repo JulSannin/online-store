@@ -1,5 +1,4 @@
-import { Catalog } from '@/modules/Catalog';
-import { Header } from '@/modules/Header';
+import { Catalog, Header } from '@/modules/';
 
 interface Props {
     countProducts: number;

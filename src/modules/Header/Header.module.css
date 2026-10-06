@@ -1,0 +1,5 @@
+/* Только то, для чего у Mantine нет пропсов.
+   z-index ниже, чем у Popover (300), но выше контента */
+.header {
+    z-index: var(--mantine-z-index-app);
+}

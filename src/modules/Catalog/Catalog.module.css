@@ -1,0 +1,28 @@
+/* Колонки фиксированной ширины (та же, что minColWidth у сетки), весь блок по центру.
+   div.grid[data-auto-cols], а не просто .grid: у Mantine есть правило с таким же атрибутом,
+   но с 1fr вместо фиксированной ширины, а наши стили подключаются раньше его стилей */
+div.grid[data-auto-cols] {
+    grid-template-columns: repeat(auto-fill, var(--sg-min-col-width));
+    justify-content: center;
+}
+
+/* Заголовок лежит внутри сетки на всю её ширину: так он стоит над левым краем
+   первой колонки, где бы ни оказался центрированный блок с карточками */
+.title {
+    grid-column: 1 / -1;
+}
+
+/* Обёртка над Skeleton — нужна, чтобы позиционировать иконку поверх него */
+.imagePlaceholder {
+    position: relative;
+}
+
+/* Skeleton закрывает содержимое псевдоэлементами (z-index 10 и 11),
+   поэтому иконку кладём сверху — отсюда z-index 12 */
+.loaderIcon {
+    position: absolute;
+    inset: 0;
+    z-index: 12;
+    width: 22px;
+    margin: auto;
+}

@@ -1,0 +1,35 @@
+/* Наведение: пропсами такое не задать, поэтому карточка и получила CSS-модуль.
+   @mixin hover из postcss-preset-mantine — это :hover только на устройствах с мышью */
+.card {
+    transition: box-shadow 150ms ease;
+
+    @mixin hover {
+        box-shadow: var(--mantine-shadow-md);
+    }
+}
+
+/* Три состояния кнопки по макету: обычное, наведение/фокус, нажатие.
+   Селектор button.addButton, а не просто .addButton: у Mantine свой класс
+   с цветом, и при равной специфичности побеждал бы он.
+   Цвет текста нельзя задать пропсом c — инлайн не перебить на :active */
+button.addButton {
+    --button-bg: var(--mantine-color-brandGreen-1);
+    --button-hover: var(--mantine-color-brandGreen-0);
+    /* Без этого на наведении Mantine возьмёт свой --button-color (белый) */
+    --button-hover-color: var(--mantine-color-brandGreen-7);
+
+    color: var(--mantine-color-brandGreen-7);
+}
+
+button.addButton:focus-visible {
+    background-color: var(--mantine-color-brandGreen-0);
+}
+
+/* background-color, а не --button-bg: правило :hover у Mantine иначе перебьёт.
+   transform: none — Mantine сдвигает кнопку на 1px вниз при нажатии (.mantine-active:active),
+   в макете такого нет */
+button.addButton:active {
+    background-color: var(--mantine-color-brandGreen-7);
+    color: var(--mantine-color-white);
+    transform: none;
+}

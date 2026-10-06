@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
-import { Header } from '@/modules/Header';
+import { Header } from '@/modules/';
 
 // env="test" отключает анимации и порталы Mantine — иначе popover сложно найти
 function renderHeader(countProducts: number) {
@@ -33,6 +33,16 @@ describe('Header', () => {
         renderHeader(2);
 
         expect(screen.getByText('2')).toBeInTheDocument();
+    });
+
+    // Слово «Cart» на мобильном скрыто, поэтому имя кнопки задаёт aria-label
+    it('у кнопки есть имя «Cart», а при непустой корзине ещё и количество', () => {
+        const { unmount } = renderHeader(0);
+        expect(screen.getByRole('button', { name: 'Cart' })).toBeInTheDocument();
+        unmount();
+
+        renderHeader(2);
+        expect(screen.getByRole('button', { name: 'Cart, 2' })).toBeInTheDocument();
     });
 
     it('открывает корзину по клику на кнопку', async () => {
