@@ -1,59 +1,78 @@
-import { MantineProvider } from '@mantine/core';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
-import { Header } from '@/modules/';
+import { type CartItem } from '@/context/cart';
+import { renderWithProviders } from '@/test/renderWithProviders';
+import { type Product } from '@/types';
 
-// env="test" отключает анимации и порталы Mantine — иначе popover сложно найти
-function renderHeader(countProducts: number) {
-    return render(
-        <MantineProvider env="test">
-            <Header countProducts={countProducts} />
-        </MantineProvider>,
-    );
-}
+import { Header } from './Header';
+
+const tomato: Product = { id: 6, name: 'Tomato', weight: '1 Kg', price: 16, image: 'tomato.jpg' };
+const cauliflower: Product = {
+    id: 2,
+    name: 'Cauliflower',
+    weight: '1 Kg',
+    price: 60,
+    image: 'cauliflower.jpg',
+};
+
+// 2 помидора и 1 капуста: на кнопке 3 — это сумма штук, а не число строк
+const items: CartItem[] = [
+    { product: tomato, quantity: 2 },
+    { product: cauliflower, quantity: 1 },
+];
 
 describe('Header', () => {
     it('отображает название магазина', () => {
-        renderHeader(0);
+        renderWithProviders(<Header />);
 
         expect(screen.getByRole('heading', { name: /vegetable shop/i })).toBeInTheDocument();
     });
 
     it('не показывает счётчик, пока корзина пуста', () => {
-        renderHeader(0);
+        renderWithProviders(<Header />);
 
         // getBy бросает ошибку, если не нашёл; queryBy возвращает null — его и используем,
         // когда проверяем, что чего-то НЕТ на странице
-        expect(screen.queryByText('2')).not.toBeInTheDocument();
+        expect(screen.queryByText('3')).not.toBeInTheDocument();
     });
 
-    it('показывает количество товаров на кнопке', () => {
-        renderHeader(2);
+    it('показывает на кнопке общее количество штук', () => {
+        renderWithProviders(<Header />, { items });
 
-        expect(screen.getByText('2')).toBeInTheDocument();
+        expect(screen.getByText('3')).toBeInTheDocument();
     });
 
     // Слово «Cart» на мобильном скрыто, поэтому имя кнопки задаёт aria-label
     it('у кнопки есть имя «Cart», а при непустой корзине ещё и количество', () => {
-        const { unmount } = renderHeader(0);
+        const { unmount } = renderWithProviders(<Header />);
         expect(screen.getByRole('button', { name: 'Cart' })).toBeInTheDocument();
         unmount();
 
-        renderHeader(2);
-        expect(screen.getByRole('button', { name: 'Cart, 2' })).toBeInTheDocument();
+        renderWithProviders(<Header />, { items });
+        expect(screen.getByRole('button', { name: 'Cart, 3' })).toBeInTheDocument();
     });
 
     it('открывает корзину по клику на кнопку', async () => {
         const user = userEvent.setup();
-        renderHeader(0);
+        renderWithProviders(<Header />);
 
         // до клика popover закрыт
-        expect(screen.queryByText('Корзина пуста')).not.toBeInTheDocument();
+        expect(screen.queryByText(/cart is empty/i)).not.toBeInTheDocument();
 
         await user.click(screen.getByRole('button', { name: /cart/i }));
 
-        expect(screen.getByText('Корзина пуста')).toBeInTheDocument();
+        expect(screen.getByText(/cart is empty/i)).toBeInTheDocument();
+    });
+
+    it('в открытой корзине видны товары и итог', async () => {
+        const user = userEvent.setup();
+        renderWithProviders(<Header />, { items });
+
+        await user.click(screen.getByRole('button', { name: /cart/i }));
+
+        expect(screen.getAllByRole('listitem')).toHaveLength(2);
+        expect(screen.getByText('Total').parentElement).toHaveTextContent('$ 92');
     });
 });

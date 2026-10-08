@@ -1,10 +1,11 @@
-import { MantineProvider } from '@mantine/core';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
-import { ProductCard } from '@/components/ProductCard/ProductCard';
-import { type Product } from '@/types/product';
+import { renderWithProviders } from '@/test/renderWithProviders';
+import { type Product } from '@/types';
+
+import { ProductCard } from './ProductCard';
 
 const product: Product = {
     id: 6,
@@ -15,11 +16,7 @@ const product: Product = {
 };
 
 function renderCard() {
-    return render(
-        <MantineProvider env="test">
-            <ProductCard product={product} />
-        </MantineProvider>,
-    );
+    return renderWithProviders(<ProductCard product={product} />);
 }
 
 describe('ProductCard', () => {
@@ -60,5 +57,19 @@ describe('ProductCard', () => {
         await user.click(screen.getByRole('button', { name: 'Увеличить количество' }));
 
         expect(minus).toBeEnabled();
+    });
+
+    it('после «Add to cart» счётчик в карточке возвращается к 1', async () => {
+        const user = userEvent.setup();
+        renderCard();
+
+        await user.click(screen.getByRole('button', { name: 'Увеличить количество' }));
+        await user.click(screen.getByRole('button', { name: 'Увеличить количество' }));
+        expect(screen.getByRole('textbox', { name: 'Количество' })).toHaveValue('3');
+
+        await user.click(screen.getByRole('button', { name: /add to cart/i }));
+
+        expect(screen.getByRole('textbox', { name: 'Количество' })).toHaveValue('1');
+        expect(screen.getByText('$ 16')).toBeInTheDocument();
     });
 });

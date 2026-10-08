@@ -2,8 +2,9 @@ import { Button, Card, Group, Image, Text } from '@mantine/core';
 import { IconShoppingCart } from '@tabler/icons-react';
 import { useState } from 'react';
 
-import { type Product } from '@/types/product';
-import { QuantityControl } from '@/ui/QuantityControl/QuantityControl';
+import { useCart } from '@/context/cart';
+import { type Product } from '@/types';
+import { QuantityControl } from '@/ui';
 
 import { CardFrameProps } from './cardFrameProps';
 import classes from './ProductCard.module.css';
@@ -13,12 +14,18 @@ interface Props {
 }
 
 export function ProductCard({ product }: Props) {
+    const { dispatch } = useCart();
     const [quantity, setQuantity] = useState(1);
     // Цена не хранится отдельным state, а считается из количества
     const price = product.price * quantity;
 
     const handleMinus = () => setQuantity((current) => current - 1);
     const handlePlus = () => setQuantity((current) => current + 1);
+
+    const handleAdd = () => {
+        dispatch({ type: 'add', product, quantity });
+        setQuantity(1); // после добавления счётчик снова дефолтный
+    };
 
     // Размеры общие с заглушкой в каталоге (cardFrameProps.ts):
     // иначе страница дёрнется, когда заглушки сменятся карточками
@@ -100,7 +107,11 @@ export function ProductCard({ product }: Props) {
             </Group>
             <Group {...FooterProps}>
                 <Text {...PriceProps}>$ {price}</Text>
-                <Button {...AddButtonProps} rightSection={<IconShoppingCart size={20} />}>
+                <Button
+                    {...AddButtonProps}
+                    onClick={handleAdd}
+                    rightSection={<IconShoppingCart size={20} />}
+                >
                     Add to cart
                 </Button>
             </Group>

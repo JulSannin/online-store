@@ -1,5 +1,6 @@
 /* Наведение: пропсами такое не задать, поэтому карточка и получила CSS-модуль.
-   @mixin hover из postcss-preset-mantine — это :hover только на устройствах с мышью */
+   @mixin hover из postcss-preset-mantine — это :hover на устройствах с мышью
+   и :active на сенсорных, где наведения нет */
 .card {
     transition: box-shadow 150ms ease;
 

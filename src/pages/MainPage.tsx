@@ -1,13 +1,9 @@
-import { Catalog, Header } from '@/modules/';
+import { Catalog, Header } from '@/modules';
 
-interface Props {
-    countProducts: number;
-}
-
-export function MainPage({ countProducts }: Props) {
+export function MainPage() {
     return (
         <>
-            <Header countProducts={countProducts} />
+            <Header />
             <Catalog />
         </>
     );

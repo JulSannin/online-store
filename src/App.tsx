@@ -1,10 +1,10 @@
-import { useState } from 'react';
-
-import { MainPage } from '@/pages/MainPage';
+import { CartProvider } from '@/context/cart';
+import { MainPage } from '@/pages';
 
 export default function App() {
-    // Временно: по плану счётчик переедет в CartProvider (useReducer)
-    const [countProducts] = useState(0);
-
-    return <MainPage countProducts={countProducts} />;
+    return (
+        <CartProvider>
+            <MainPage />
+        </CartProvider>
+    );
 }
